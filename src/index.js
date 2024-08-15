@@ -11,22 +11,20 @@ const cruiser = new Ship(3);
 const battleship = new Ship(4);
 const carrier = new Ship(5);
 
-const player = new Player();
-const computer = new Player();
+const player = new Player('player');
+const computer = new Player('computer');
 
 boardSetup();
 
-player.gameboard.place(destroyer, 0, 2, 0, 0);
-addShip(0, 2, 0, 0, 'player');
-player.gameboard.place(submarine, 3, 3, 3, 6);
-addShip(3, 3, 3, 6, 'player');
-player.gameboard.place(cruiser, 5, 8, 0, 0);
-addShip(5, 8, 0, 0, 'player');
-player.gameboard.place(battleship, 2, 2, 0, 4,);
-addShip(2, 2, 0, 4, 'player');
-player.gameboard.place(carrier, 5, 5, 4, 9);
-addShip(5, 5, 4, 9, 'player');
+addShip(destroyer, player, 0, 2, 0, 0);
+addShip(submarine, player, 3, 3, 3, 6);
+addShip(cruiser, player, 5, 8, 0, 0);
+addShip(battleship, player, 2, 2, 0, 4);
+addShip(carrier, player, 5, 5, 4, 9);
 
-computer.gameboard.place(destroyer, 5, 7, 0, 0);
-addShip(5, 7, 0, 0, 'computer');
+addShip(destroyer, computer, 5, 7, 0, 0);
+addShip(submarine, computer, 3, 3, 0, 3);
+addShip(cruiser, computer, 0, 3, 4, 4);
+addShip(battleship, computer, 1, 5, 7, 7);
+addShip(carrier, computer, 5, 10, 9, 9);
 
