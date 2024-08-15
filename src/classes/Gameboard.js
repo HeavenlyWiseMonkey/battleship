@@ -46,18 +46,19 @@ class Gameboard {
                 }
             }
             this.state[x][y].hit(position);
+            // this.outcome(x, y);
             return true;
         }
         this.state[x][y] = true;
         return false;
     }
     outcome(x, y) {
+        // console.log(this.state[x][y]);
         if (typeof this.state[x][y] === 'object' && this.state[x][y] !== true && this.state[x][y].isSunk()) {
             this.ships--;
-        }
-        if (this.ships===0) {
             return true;
         }
+        return false;
     }
 }
 

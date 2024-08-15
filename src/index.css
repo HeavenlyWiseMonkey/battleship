@@ -41,3 +41,7 @@
 .miss {
     background-color: grey;
 }
+
+.sunk {
+    background-color: purple;
+}
