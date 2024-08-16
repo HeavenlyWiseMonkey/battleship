@@ -26,16 +26,22 @@ function boardSetup(player, computer) {
     }
 }
 
-// make specific board get ship added
-function addShip(ship, player, startX, endX, startY, endY) {
+function addShip(ship, player, x, y, vertical) {
+    // make specific board get ship added
     const board = document.querySelector(`.${player.owner}`);
-    player.gameboard.place(ship, startX, endX, startY, endY);
+    player.gameboard.place(ship, x, y, vertical);
     const squares = board.children;
-    for (let i=startX; i<endX; i++) {
-        squares[i+startY*10].classList.add('ship');
+    // horizontal
+    if (!vertical) {
+        for (let i=x; i<x+ship.length; i++) {
+            squares[i+y*10].classList.add('ship');
+        }
     }
-    for (let i=startY; i<endY; i++) {
-        squares[i*10+startX].classList.add('ship');
+    // vertical
+    else {
+        for (let i=y; i<y+ship.length; i++) {
+            squares[i*10+x].classList.add('ship');
+        }
     }
 }
 
@@ -48,7 +54,6 @@ function attack(self, player) {
 
     if (player.gameboard.receiveAttack(x, y)) {
         self.classList.add('hit');
-        console.log(player);
         if (player.gameboard.outcome(x, y)) {
             self.classList.add('sunk');
         }
@@ -93,17 +98,17 @@ function game() {
     // const battleship = new Ship(4);
     // const carrier = new Ship(5);
 
-    addShip(new Ship(2), player, 0, 2, 0, 0);
-    addShip(new Ship(3), player, 3, 3, 3, 6);
-    addShip(new Ship(3), player, 5, 8, 0, 0);
-    addShip(new Ship(4), player, 2, 2, 0, 4);
-    addShip(new Ship(5), player, 5, 5, 4, 9);
+    addShip(new Ship(2), player, 0, 0, false);
+    addShip(new Ship(3), player, 3, 3, true);
+    addShip(new Ship(3), player, 5, 0, false);
+    addShip(new Ship(4), player, 2, 0, true);
+    addShip(new Ship(5), player, 5, 4, true);
 
-    addShip(new Ship(2), computer, 5, 7, 0, 0);
-    addShip(new Ship(3), computer, 3, 3, 0, 3);
-    addShip(new Ship(3), computer, 0, 3, 4, 4);
-    addShip(new Ship(4), computer, 1, 5, 7, 7);
-    addShip(new Ship(5), computer, 5, 10, 9, 9);
+    addShip(new Ship(2), computer, 5, 0, false);
+    addShip(new Ship(3), computer, 3, 0, true);
+    addShip(new Ship(3), computer, 0, 4, false);
+    addShip(new Ship(4), computer, 1, 7, false);
+    addShip(new Ship(5), computer, 5, 9, false);
 }
 
 export {game};

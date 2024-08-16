@@ -16,14 +16,18 @@ class Gameboard {
             row = [];
         }
     }
-    place(ship, startX, endX, startY, endY) {
+    place(ship, x, y, vertical) {
         // horizontal
-        for (let i=startX; i<endX; i++) {
-            this.state[startY][i] = ship;
+        if (!vertical) {
+            for (let i=x; i<x+ship.length; i++) {
+                this.state[y][i] = ship;
+            }
         }
         // vertical
-        for (let i=startY; i<endY; i++) {
-            this.state[i][startX] = ship;
+        else {
+            for (let i=y; i<y+ship.length; i++) {
+                this.state[i][x] = ship;
+            }
         }
     }
     receiveAttack(x, y) {
