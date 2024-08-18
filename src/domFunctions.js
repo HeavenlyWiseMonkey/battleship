@@ -49,13 +49,35 @@ function attack(self, player) {
     // get index of square and update colour
     const board = self.parentElement;
     const index = Array.from(board.children).indexOf(self);
-    const x = Math.floor(index/10);
-    const y = index%10;
-
+    const x = index%10;
+    const y = Math.floor(index/10);
     if (player.gameboard.receiveAttack(x, y)) {
         self.classList.add('hit');
+        const ship = player.gameboard.state[y][x];
+        // sink all parts of the ship
         if (player.gameboard.outcome(x, y)) {
-            self.classList.add('sunk');
+            const squares = board.children;
+            // horizontal
+            if (!ship.vertical) {
+                const start = index-ship.hits[ship.hits.length-1];
+                const end = index+ship.hits.length-ship.hits[ship.hits.length-1];
+                for (let i=start; i<end; i++) {
+                    squares[i].classList.add('sunk');
+                }
+            }
+            // vertical
+            else {
+                // bug: missing attacks above ship moves sunk above ship
+                const start = index-ship.hits[ship.hits.length-1]*10;
+                const end = index+(ship.hits.length-ship.hits[ship.hits.length-1])*10;
+                // console.log(index);
+                // console.log(ship.hits[ship.hits.length-1]);
+                // console.log(start);
+                // console.log(end);
+                for (let i=start; i<end; i+=10) {
+                    squares[i].classList.add('sunk');
+                }
+            }
         }
     }
     else {
@@ -71,11 +93,11 @@ function changeTurn(self, player, computer) {
 function computerAttack(player) {
     // find any adjacent squares to attack
     const squares = document.querySelector('.player').children;
-    for (let i=0; i<squares.length; i++) {
-        if (squares[i].classList.contains('hit')) {
+    // for (let i=0; i<squares.length; i++) {
+    //     if (squares[i].classList.contains('hit')) {
             
-        }
-    }
+    //     }
+    // }
     // otherwise attack random square
     let randomNumber = Math.floor(Math.random()*100);
 
@@ -105,9 +127,9 @@ function game() {
     addShip(new Ship(5), player, 5, 4, true);
 
     addShip(new Ship(2), computer, 5, 0, false);
-    addShip(new Ship(3), computer, 3, 0, true);
+    addShip(new Ship(3), computer, 3, 2, true);
     addShip(new Ship(3), computer, 0, 4, false);
-    addShip(new Ship(4), computer, 1, 7, false);
+    addShip(new Ship(4), computer, 4, 4, true);
     addShip(new Ship(5), computer, 5, 9, false);
 }
 

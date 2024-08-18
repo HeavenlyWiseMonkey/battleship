@@ -27,38 +27,43 @@ class Gameboard {
         else {
             for (let i=y; i<y+ship.length; i++) {
                 this.state[i][x] = ship;
+                this.state[i][x].vertical = true;
             }
         }
     }
     receiveAttack(x, y) {
-        if (this.state[x][y] && typeof this.state[x][y] === 'object') {
+        // let a = this.state[x][y];
+        // let b = this.state[x][y-1];
+        // console.log(a);
+        // console.log(b);
+        if (typeof this.state[y][x] === 'object' && this.state[y][x] && this.state[y][x] !== true) {
             let position = 0;
             // horizontal
-            if (x>0 && this.state[x-1][y]) {
+            if (y>0 && this.state[y-1][x]) {
                 let i = 1;
-                while (x-i>=0 && this.state[x-i][y]) {
+                while (y-i>=0 && this.state[y-i][x]) {
                     position++;
                     i++;
                 }
+                // console.log('horizontal');
             }
             // vertical
-            if (y>0 && this.state[x][y-1]) {
+            else if (x>0 && this.state[y][x-1] && !position) {
                 let i = 1;
-                while (y-i>=0 && this.state[x][y-i]) {
+                while (x-i>=0 && this.state[y][x-i]) {
                     position++;
                     i++;
                 }
+                // console.log('vertical');
             }
-            this.state[x][y].hit(position);
-            // this.outcome(x, y);
+            this.state[y][x].hit(position);
             return true;
         }
-        this.state[x][y] = true;
+        this.state[y][x] = true;
         return false;
     }
     outcome(x, y) {
-        // console.log(this.state[x][y]);
-        if (typeof this.state[x][y] === 'object' && this.state[x][y] !== true && this.state[x][y].isSunk()) {
+        if (typeof this.state[y][x] === 'object' && this.state[y][x] !== true && this.state[y][x].isSunk()) {
             this.ships--;
             return true;
         }
