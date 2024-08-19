@@ -32,30 +32,25 @@ class Gameboard {
         }
     }
     receiveAttack(x, y) {
-        // let a = this.state[x][y];
-        // let b = this.state[x][y-1];
-        // console.log(a);
-        // console.log(b);
         if (typeof this.state[y][x] === 'object' && this.state[y][x] && this.state[y][x] !== true) {
             let position = 0;
             // horizontal
-            if (y>0 && this.state[y-1][x]) {
+            if (x>0 && this.state[y][x-1]===this.state[y][x] && !position) {
                 let i = 1;
-                while (y-i>=0 && this.state[y-i][x]) {
+                while (x-i>=0 && this.state[y][x-i]===this.state[y][x]) {
                     position++;
                     i++;
-                }
-                // console.log('horizontal');
+                    }
             }
             // vertical
-            else if (x>0 && this.state[y][x-1] && !position) {
+            else if (y>0 && this.state[y-1][x]===this.state[y][x]) {
                 let i = 1;
-                while (x-i>=0 && this.state[y][x-i]) {
+                while (y-i>=0 && this.state[y-i][x]===this.state[y][x]) {
                     position++;
                     i++;
                 }
-                // console.log('vertical');
             }
+
             this.state[y][x].hit(position);
             return true;
         }
