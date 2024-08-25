@@ -92,12 +92,93 @@ function changeTurn(self, player, computer) {
 
 function computerAttack(player) {
     // find any adjacent squares to attack
-    const squares = document.querySelector('.player').children;
-    // for (let i=0; i<squares.length; i++) {
-    //     if (squares[i].classList.contains('hit')) {
-            
-    //     }
-    // }
+    const squares = Array.from(document.querySelector('.player').children);
+    let hitSquare;
+    for (let i=0; i<squares.length; i++) {
+        if (squares[i].classList.contains('hit') && !squares[i].classList.contains('sunk')) {
+            hitSquare = squares[i];
+            break;
+        }
+    }
+    if (hitSquare) {
+        const index = squares.indexOf(hitSquare);
+        let checkUp = index-10>=0;
+        let checkDown = index+10<100;
+        let checkLeft = index-1>=0 && Math.floor((index-1)/10)===Math.floor(index/10);
+        let checkRight = index+1<100 && Math.floor((index+1)/10)===Math.floor(index/10);
+        let point = 10;
+        // if there are any hit squares above or below
+        if (checkUp && squares[index-10].classList.contains('hit') || checkDown && squares[index+10].classList.contains('hit')) {
+            while (checkUp && squares[index-point].classList.contains('hit')) {
+                point+=10;
+                checkUp = index-10>=0;
+            }
+            if (checkUp && !squares[index-point].classList.contains('miss')) {
+                console.log('up algorithm');
+                attack(squares[index-point], player);
+                return;
+            }
+            point = 10;
+            while (checkDown && squares[index+point].classList.contains('hit')) {
+                point+=10;
+                checkDown = index+10<100;
+            }
+            if (checkDown && !squares[index+point].classList.contains('miss')) {
+                console.log('down algorithm');
+                attack(squares[index+point], player);
+                return;
+            }
+        }
+        // if there are any hit squares left or right
+        else if (checkLeft && squares[index-1].classList.contains('hit') || checkRight && squares[index+1].classList.contains('hit')) {
+            point = 1;
+            while (checkLeft && squares[index-point].classList.contains('hit')) {
+                point+=1;
+                checkLeft = index-1>=0 && Math.floor((index-1)/10)===Math.floor(index/10);
+            }
+            if (checkLeft && !squares[index-point].classList.contains('miss')) {
+                console.log('left algorithm');
+                attack(squares[index-point], player);
+                return;
+            }
+            point = 1;
+            while (checkRight && squares[index+point].classList.contains('hit')) {
+                point+=1;
+                checkRight = index+1<100 && Math.floor((index+1)/10)===Math.floor(index/10);
+            }
+            if (checkRight && !squares[index+point].classList.contains('miss')) {
+                console.log('right algorithm');
+                attack(squares[index+point], player);
+                return;
+                }
+            }
+        // if the only hit square is itself
+        // up
+        if (checkUp && !(squares[index-10].classList.contains('hit') || squares[index-10].classList.contains('miss'))) {
+            console.log('up');
+            attack(squares[index-10], player);
+            return;
+        }
+        // down
+        else if (checkDown && !(squares[index+10].classList.contains('hit') || squares[index+10].classList.contains('miss'))) {
+            console.log('down');
+            attack(squares[index+10], player);
+            return;
+        }
+        // left
+        else if (checkLeft && !(squares[index-1].classList.contains('hit') || squares[index-1].classList.contains('miss'))) {
+            console.log('left');
+            attack(squares[index-1], player);
+            return;
+            }
+        // right
+        else if (checkRight && !(squares[index+1].classList.contains('hit') || squares[index+1].classList.contains('miss'))) {
+            console.log('right');
+            attack(squares[index+1], player);
+            return;
+        }
+    }
+
     // otherwise attack random square
     let randomNumber = Math.floor(Math.random()*100);
 
