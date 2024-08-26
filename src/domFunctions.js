@@ -67,17 +67,15 @@ function attack(self, player) {
             }
             // vertical
             else {
-                // bug: missing attacks above ship moves sunk above ship
                 const start = index-ship.hits[ship.hits.length-1]*10;
                 const end = index+(ship.hits.length-ship.hits[ship.hits.length-1])*10;
-                // console.log(index);
-                // console.log(ship.hits[ship.hits.length-1]);
-                // console.log(start);
-                // console.log(end);
                 for (let i=start; i<end; i+=10) {
                     squares[i].classList.add('sunk');
                 }
             }
+        }
+        if (!player.gameboard.ships) {
+            setWinnerText(player);
         }
     }
     else {
@@ -187,6 +185,16 @@ function computerAttack(player) {
         randomNumber = Math.floor(Math.random()*100);
     }
     attack(squares[randomNumber], player);
+}
+
+function setWinnerText(player) {
+    const winnerText = document.querySelector('.winner');
+    if (player.owner==='computer') {
+        winnerText.textContent = 'player wins';
+    }
+    else {
+        winnerText.textContent = 'computer wins';
+    }
 }
 
 function game() {
