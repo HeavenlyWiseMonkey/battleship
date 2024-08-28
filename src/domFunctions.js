@@ -28,21 +28,23 @@ function boardSetup(player, computer) {
 
 function addShip(ship, player, x, y, vertical) {
     // make specific board get ship added
-    const board = document.querySelector(`.${player.owner}`);
+    const boards = document.querySelectorAll(`.${player.owner}`);
     player.gameboard.place(ship, x, y, vertical);
-    const squares = board.children;
-    // horizontal
-    if (!vertical) {
-        for (let i=x; i<x+ship.length; i++) {
-            squares[i+y*10].classList.add('ship');
+    boards.forEach((board) => {
+        const squares = board.children;
+        // horizontal
+        if (!vertical) {
+            for (let i=x; i<x+ship.length; i++) {
+                squares[i+y*10].classList.add('ship');
+            }
         }
-    }
-    // vertical
-    else {
-        for (let i=y; i<y+ship.length; i++) {
-            squares[i*10+x].classList.add('ship');
+        // vertical
+        else {
+            for (let i=y; i<y+ship.length; i++) {
+                squares[i*10+x].classList.add('ship');
+            }
         }
-    }
+    });
 }
 
 function attack(self, player) {
@@ -197,29 +199,122 @@ function setWinnerText(player) {
     }
 }
 
+function domPlaceShip(player) {
+    const playerBoard = document.querySelector('.player');
+    const startPlayerBoard = playerBoard.cloneNode(true);
+    const squares = startPlayerBoard.children;
+    const start = document.querySelector('.start');
+    const placeText = document.createElement('h1');
+    const rotateButton = document.createElement('button');
+
+    placeText.textContent = 'Place your carrier';
+    rotateButton.textContent = 'Rotate';
+
+    let vertical = false;
+
+    rotateButton.addEventListener('click', () => {
+        if (vertical) {
+            vertical = false;
+        }
+        else {
+            vertical = true;
+        }
+    });
+
+    const carrier = new Ship(5);
+    const battleship = new Ship(4);
+    const cruiser = new Ship(3);
+    const submarine = new Ship(3);
+    const destroyer = new Ship(2);
+    const ships = [carrier, battleship, cruiser, submarine, destroyer];
+    let cur = 0;
+
+    for (let i=0; i<squares.length; i++) {
+        squares[i].addEventListener('mouseover', () => {
+            if (vertical) {
+                for (let j=0; j<ships[cur].length; j++) {
+                    if (i+j*10<100) {
+                        squares[i+j*10].classList.add('hover');
+                    }
+                }
+            }
+            else {
+                for (let j=0; j<ships[cur].length; j++) {
+                    if (i+j<100 && Math.floor((i+j)/10) === Math.floor(i/10)) {
+                        squares[i+j].classList.add('hover');
+                    }
+                }
+            }
+        });
+        squares[i].addEventListener('mouseout', () => {
+            if (cur<5) {
+                if (vertical) {
+                    for (let j=0; j<ships[cur].length+1; j++) {
+                        if (i+j*10<100) {
+                            squares[i+j*10].classList.remove('hover');
+                        }
+                    }
+                }
+                else {
+                    for (let j=0; j<ships[cur].length+1; j++) {
+                        if (i+j<100) {
+                            squares[i+j].classList.remove('hover');
+                        }
+                    }
+                }
+            }
+        })
+        squares[i].addEventListener('click', () => {
+            const horizontalCheck = Math.floor((i+ships[cur].length-1)/10)===Math.floor(i/10);
+            const verticalCheck = i+(ships[cur].length-1)*10<100;
+            if (horizontalCheck && !vertical || verticalCheck && vertical && !squares[i].classList.contains('ship')) {
+                addShip(ships[cur], player, i%10, Math.floor(i/10), vertical);
+                cur++;
+                switch (cur) {
+                    case 1:
+                        placeText.textContent = 'Place your battleship';
+                        break;
+                    case 2:
+                        placeText.textContent = 'Place your cruiser';
+                        break;
+                    case 3:
+                        placeText.textContent = 'Place your submarine';
+                        break;
+                    case 4:
+                        placeText.textContent = 'Place your destroyer';
+                }
+                if (cur===ships.length) {
+                    start.close();
+                }
+            }
+        });
+    }
+
+    start.appendChild(placeText);
+    start.appendChild(rotateButton);
+    start.appendChild(startPlayerBoard);
+
+    start.showModal();
+}
+
 function game() {
     const player = new Player('player');
     const computer = new Player('computer');
 
     boardSetup(player, computer);
+    domPlaceShip(player);
 
-    // const destroyer = new Ship(2);
-    // const submarine = new Ship(3);
-    // const cruiser = new Ship(3);
-    // const battleship = new Ship(4);
-    // const carrier = new Ship(5);
+    // addShip(new Ship(2), player, 0, 0, false);
+    // addShip(new Ship(3), player, 3, 3, true);
+    // addShip(new Ship(3), player, 5, 0, false);
+    // addShip(new Ship(4), player, 2, 0, true);
+    // addShip(new Ship(5), player, 5, 4, true);
 
-    addShip(new Ship(2), player, 0, 0, false);
-    addShip(new Ship(3), player, 3, 3, true);
-    addShip(new Ship(3), player, 5, 0, false);
-    addShip(new Ship(4), player, 2, 0, true);
-    addShip(new Ship(5), player, 5, 4, true);
-
-    addShip(new Ship(2), computer, 5, 0, false);
-    addShip(new Ship(3), computer, 3, 2, true);
-    addShip(new Ship(3), computer, 0, 4, false);
-    addShip(new Ship(4), computer, 4, 4, true);
-    addShip(new Ship(5), computer, 5, 9, false);
+    // addShip(new Ship(2), computer, 5, 0, false);
+    // addShip(new Ship(3), computer, 3, 2, true);
+    // addShip(new Ship(3), computer, 0, 4, false);
+    // addShip(new Ship(4), computer, 4, 4, true);
+    // addShip(new Ship(5), computer, 5, 9, false);
 }
 
 export {game};
