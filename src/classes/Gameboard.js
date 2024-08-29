@@ -64,6 +64,51 @@ class Gameboard {
         }
         return false;
     }
+    randomGeneration() {
+        const carrier = new Ship(5);
+        const battleship = new Ship(4);
+        const cruiser = new Ship(3);
+        const submarine = new Ship(3);
+        const destroyer = new Ship(2);
+        const ships = [carrier, battleship, cruiser, submarine, destroyer];
+        let cur = 0;
+        for (let i=0; i<ships.length; i++) {
+            const vertical = Math.floor(Math.random() * 2);
+            if (vertical) {
+                let start = Math.floor(Math.random() * (100-(ships[cur].length-1)*10));
+                let check = true;
+                while (check) {
+                    for (let j=0; j<ships[cur].length; j++) {
+                        if (typeof this.state[Math.floor(start/10)+j][start%10]==='object') {
+                            start = Math.floor(Math.random() * (100-(ships[cur].length-1)*10));
+                        }
+                    }
+                    check = false;
+                }
+                for (let j=0; j<ships[cur].length; j++) {
+                    this.state[Math.floor(start/10)+j][start%10] = ships[cur];
+                }
+            }
+            else {
+                let start = Math.floor(Math.random() * 99);
+                let check = true;
+                while (check) {
+                    if (Math.floor(start/10)!==Math.floor((start+ships[cur].length)/10)) {
+                        Math.floor(Math.random() * 99)
+                    }
+                    for (let j=0; j<ships[cur].length; j++) {
+                        if (typeof this.state[Math.floor(start/10)][start%10+j]==='object') {
+                            start = Math.floor(Math.random() * 99);
+                        }
+                    }
+                    check = false;
+                }
+                for (let j=0; j<ships[cur].length; j++) {
+                    this.state[Math.floor(start/10)][start%10+j] = ships[cur];
+                }
+            }
+        }     
+    }
 }
 
 export default Gameboard;
