@@ -83,6 +83,7 @@ function attack(self, player) {
     else {
         self.classList.add('miss');
     }
+    console.log(player.gameboard);
 }
 
 function changeTurn(self, player, computer) {
@@ -114,7 +115,7 @@ function computerAttack(player) {
                 checkUp = index-10>=0;
             }
             if (checkUp && !squares[index-point].classList.contains('miss')) {
-                console.log('up algorithm');
+                // console.log('up algorithm');
                 attack(squares[index-point], player);
                 return;
             }
@@ -124,7 +125,7 @@ function computerAttack(player) {
                 checkDown = index+10<100;
             }
             if (checkDown && !squares[index+point].classList.contains('miss')) {
-                console.log('down algorithm');
+                // console.log('down algorithm');
                 attack(squares[index+point], player);
                 return;
             }
@@ -137,7 +138,7 @@ function computerAttack(player) {
                 checkLeft = index-1>=0 && Math.floor((index-1)/10)===Math.floor(index/10);
             }
             if (checkLeft && !squares[index-point].classList.contains('miss')) {
-                console.log('left algorithm');
+                // console.log('left algorithm');
                 attack(squares[index-point], player);
                 return;
             }
@@ -147,7 +148,7 @@ function computerAttack(player) {
                 checkRight = index+1<100 && Math.floor((index+1)/10)===Math.floor(index/10);
             }
             if (checkRight && !squares[index+point].classList.contains('miss')) {
-                console.log('right algorithm');
+                // console.log('right algorithm');
                 attack(squares[index+point], player);
                 return;
                 }
@@ -155,25 +156,25 @@ function computerAttack(player) {
         // if the only hit square is itself
         // up
         if (checkUp && !(squares[index-10].classList.contains('hit') || squares[index-10].classList.contains('miss'))) {
-            console.log('up');
+            // console.log('up');
             attack(squares[index-10], player);
             return;
         }
         // down
         else if (checkDown && !(squares[index+10].classList.contains('hit') || squares[index+10].classList.contains('miss'))) {
-            console.log('down');
+            // console.log('down');
             attack(squares[index+10], player);
             return;
         }
         // left
         else if (checkLeft && !(squares[index-1].classList.contains('hit') || squares[index-1].classList.contains('miss'))) {
-            console.log('left');
+            // console.log('left');
             attack(squares[index-1], player);
             return;
             }
         // right
         else if (checkRight && !(squares[index+1].classList.contains('hit') || squares[index+1].classList.contains('miss'))) {
-            console.log('right');
+            // console.log('right');
             attack(squares[index+1], player);
             return;
         }
