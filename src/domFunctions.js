@@ -53,6 +53,7 @@ function attack(self, player) {
     const index = Array.from(board.children).indexOf(self);
     const x = index%10;
     const y = Math.floor(index/10);
+    console.log(board);
     if (player.gameboard.receiveAttack(x, y)) {
         self.classList.add('hit');
         const ship = player.gameboard.state[y][x];
@@ -83,7 +84,6 @@ function attack(self, player) {
     else {
         self.classList.add('miss');
     }
-    console.log(player.gameboard);
 }
 
 function changeTurn(self, player, computer) {

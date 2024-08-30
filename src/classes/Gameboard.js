@@ -87,9 +87,6 @@ class Gameboard {
                     check = false;
                 }
                 this.place(ships[cur], start%10, Math.floor(start/10), vertical);
-                // for (let j=0; j<ships[cur].length; j++) {
-                //     this.state[Math.floor(start/10)+j][start%10] = ships[cur];
-                // }
             }
             else {
                 let start = Math.floor(Math.random() * 99);
@@ -108,9 +105,6 @@ class Gameboard {
                     check = false;
                 }
                 this.place(ships[cur], start%10, Math.floor(start/10), vertical);
-                // for (let j=0; j<ships[cur].length; j++) {
-                //     this.state[Math.floor(start/10)][start%10+j] = ships[cur];
-                // }
             }
             cur++;
         }     
