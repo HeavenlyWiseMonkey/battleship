@@ -310,16 +310,16 @@ function game() {
     const computer = new Player('computer');
 
     boardSetup(player, computer);
-    // computer.gameboard.randomGeneration();
+    computer.gameboard.randomGeneration();
     // console.log(computer.gameboard);
-    // const computerSquares = document.querySelector('.computer').children;
-    // for (let i=0; i<computer.gameboard.state.length; i++) {
-    //     for (let j=0; j<computer.gameboard.state[i].length; j++) {
-    //         if (typeof computer.gameboard.state[i][j]==='object') {
-    //             computerSquares[i*10+j].classList.add('ship');
-    //         }
-    //     }
-    // }
+    const computerSquares = document.querySelector('.computer').children;
+    for (let i=0; i<computer.gameboard.state.length; i++) {
+        for (let j=0; j<computer.gameboard.state[i].length; j++) {
+            if (computer.gameboard.state[i][j]) {
+                computerSquares[i*10+j].classList.add('ship');
+            }
+        }
+    }
     domPlaceShip(player);
 
     // addShip(new Ship(2), player, 0, 0, false);

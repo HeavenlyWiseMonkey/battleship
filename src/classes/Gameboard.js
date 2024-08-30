@@ -79,8 +79,9 @@ class Gameboard {
                 let check = true;
                 while (check) {
                     for (let j=0; j<ships[cur].length; j++) {
-                        if (typeof this.state[Math.floor(start/10)+j][start%10]==='object') {
+                        if (this.state[Math.floor(start/10)+j][start%10]) {
                             start = Math.floor(Math.random() * (100-(ships[cur].length-1)*10));
+                            continue;
                         }
                     }
                     check = false;
@@ -92,13 +93,15 @@ class Gameboard {
             else {
                 let start = Math.floor(Math.random() * 99);
                 let check = true;
-                while (check) {
-                    if (Math.floor(start/10)!==Math.floor((start+ships[cur].length)/10)) {
-                        Math.floor(Math.random() * 99)
+                first: while (check) {
+                    if (Math.floor(start/10)!==Math.floor((start+ships[cur].length-1)/10)) {
+                        start = Math.floor(Math.random() * 99);
+                        continue;
                     }
                     for (let j=0; j<ships[cur].length; j++) {
-                        if (typeof this.state[Math.floor(start/10)][start%10+j]==='object') {
+                        if (this.state[Math.floor(start/10)][start%10+j]) {
                             start = Math.floor(Math.random() * 99);
+                            continue first;
                         }
                     }
                     check = false;
@@ -107,6 +110,7 @@ class Gameboard {
                     this.state[Math.floor(start/10)][start%10+j] = ships[cur];
                 }
             }
+            cur++;
         }     
     }
 }
