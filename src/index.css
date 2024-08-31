@@ -1,6 +1,6 @@
 .main {
     font-family: sans-serif;
-    gap: 150px;
+    gap: 3rem;
 }
 
 .main, .start[open], .winner[open] {
