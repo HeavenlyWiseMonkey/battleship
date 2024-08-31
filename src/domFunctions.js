@@ -1,4 +1,3 @@
-import Gameboard from './classes/Gameboard';
 import Player from './classes/Player';
 import Ship from './classes/Ship';
 
@@ -53,7 +52,6 @@ function attack(self, player) {
     const index = Array.from(board.children).indexOf(self);
     const x = index%10;
     const y = Math.floor(index/10);
-    console.log(board);
     if (player.gameboard.receiveAttack(x, y)) {
         self.classList.add('hit');
         const ship = player.gameboard.state[y][x];
@@ -78,7 +76,10 @@ function attack(self, player) {
             }
         }
         if (!player.gameboard.ships) {
+            const winnerDialog = document.querySelector('.winner');
+            winnerDialog.showModal();
             setWinnerText(player);
+            return true;
         }
     }
     else {
@@ -87,8 +88,9 @@ function attack(self, player) {
 }
 
 function changeTurn(self, player, computer) {
-    attack(self, computer);
-    computerAttack(player);
+    if (!attack(self, computer)) {
+        computerAttack(player);
+    }
 }
 
 function computerAttack(player) {
@@ -191,12 +193,12 @@ function computerAttack(player) {
 }
 
 function setWinnerText(player) {
-    const winnerText = document.querySelector('.winner');
+    const winnerText = document.querySelector('.winnerText');
     if (player.owner==='computer') {
-        winnerText.textContent = 'player wins';
+        winnerText.textContent = 'Player wins';
     }
     else {
-        winnerText.textContent = 'computer wins';
+        winnerText.textContent = 'Computer wins';
     }
 }
 
@@ -205,8 +207,8 @@ function domPlaceShip(player) {
     const startPlayerBoard = playerBoard.cloneNode(true);
     const squares = startPlayerBoard.children;
     const start = document.querySelector('.start');
-    const placeText = document.createElement('h1');
-    const rotateButton = document.createElement('button');
+    const placeText = document.querySelector('.placeText');
+    const rotateButton = document.querySelector('.rotateButton');
 
     placeText.textContent = 'Place your carrier';
     rotateButton.textContent = 'Rotate';
@@ -291,16 +293,18 @@ function domPlaceShip(player) {
                         break;
                     case 4:
                         placeText.textContent = 'Place your destroyer';
+                        break;
+                    case 5:
+                        placeText.textContent = 'Place your carrier';
                 }
                 if (cur===ships.length) {
                     start.close();
+                    startPlayerBoard.remove();
                 }
             }
         });
     }
 
-    start.appendChild(placeText);
-    start.appendChild(rotateButton);
     start.appendChild(startPlayerBoard);
 
     start.showModal();
@@ -312,28 +316,18 @@ function game() {
 
     boardSetup(player, computer);
     computer.gameboard.randomGeneration();
-    // console.log(computer.gameboard);
-    const computerSquares = document.querySelector('.computer').children;
-    for (let i=0; i<computer.gameboard.state.length; i++) {
-        for (let j=0; j<computer.gameboard.state[i].length; j++) {
-            if (computer.gameboard.state[i][j]) {
-                computerSquares[i*10+j].classList.add('ship');
-            }
-        }
-    }
     domPlaceShip(player);
-
-    // addShip(new Ship(2), player, 0, 0, false);
-    // addShip(new Ship(3), player, 3, 3, true);
-    // addShip(new Ship(3), player, 5, 0, false);
-    // addShip(new Ship(4), player, 2, 0, true);
-    // addShip(new Ship(5), player, 5, 4, true);
-
-    // addShip(new Ship(2), computer, 5, 0, false);
-    // addShip(new Ship(3), computer, 3, 2, true);
-    // addShip(new Ship(3), computer, 0, 4, false);
-    // addShip(new Ship(4), computer, 4, 4, true);
-    // addShip(new Ship(5), computer, 5, 9, false);
 }
 
-export {game};
+function retry() {
+    const retryButton = document.querySelector('.retryButton');
+    retryButton.addEventListener('click', () => {
+        const winnerDialog = document.querySelector('.winner');
+        winnerDialog.close();
+        const squares = document.querySelectorAll('.square');
+        squares.forEach((square) => square.remove());
+        game();
+    });
+}
+
+export {game, retry};
